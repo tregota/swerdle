@@ -29,7 +29,7 @@ const lightTheme = createTheme({
       empty: {
         main: '#ffffff'
       },
-      grey: {
+      miss: {
         main: '#fbfbfb',
         dark: '#e1e1e1',
         light: '#ffffff'
@@ -70,7 +70,7 @@ const lightTheme = createTheme({
       main: '#40a4f7',
       dark: '#1c7ad6'
     },
-    key_grey: {
+    key_miss: {
       main: '#9f9f9f',
       dark: '#9f9f9f'
     },

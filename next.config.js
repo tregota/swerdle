@@ -1,4 +1,4 @@
 module.exports = {
   reactStrictMode: true,
-  assetPrefix: '/swerdle',
+  // assetPrefix: '/swerdle',
 }
