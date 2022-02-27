@@ -1,5 +1,5 @@
 export default {
-    url: 'https://github.com/tregota',
+    url: 'https://tregota.github.io/swerdle/',
     wordLength: 5,
     attempts: 6,
     typeMapping: {
