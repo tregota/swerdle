@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function useKeyPress(handler, dependencies) {
+export default function useKeyPress(event, handler, dependencies) {
   const funcRef = useRef(handler);
 
   useEffect(() => {
@@ -8,16 +8,16 @@ export default function useKeyPress(handler, dependencies) {
   }, dependencies);
 
   useEffect(() => {
-    const localHandler = ({ key, keyCode }) => {
-      funcRef.current(key, keyCode);
+    const localHandler = (event) => {
+        funcRef.current(event);
     }
 
     // Add event listener
-    window.addEventListener("keydown", localHandler);
+    window.addEventListener(event, localHandler);
 
     // Remove event listeners on cleanup
     return () => {
-      window.removeEventListener("keydown", localHandler);
+      window.removeEventListener(event, localHandler);
     };
-  }, []);
+  }, [event]);
 }

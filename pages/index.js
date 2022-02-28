@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import Head from 'next/head'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import useEvent from '../hooks/useEvent';
 import Keyboard from '../components/keyboard';
 import TileGrid from '../components/tilegrid';
 import { useCookies } from "react-cookie";
@@ -26,7 +27,8 @@ const Container = styled('div')(({ theme, padding }) => ({
   display: 'flex',
   flexDirection: 'column',
   minWidth: '100vw',
-  height: '100vh'
+  height: '100vh',
+  height: 'calc(var(--vh, 1vh) * 100)'
 }));
 const Main = styled('div')(({ theme }) => ({
   flex: 1,
@@ -68,6 +70,18 @@ export default function Home() {
   const [gameState, setGameState] = useState(0);
   const [message, setMessage] = useState();
 
+  useEffect(() => {
+    // from https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  },[]);
+
+  useEvent('resize', () => {
+    // We execute the same script as before
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }, [])
+
   useEffect(() => 
   {
     if(cookies.date === dayAndMonth) {
@@ -94,7 +108,7 @@ export default function Home() {
       setGameState(0);
       setIndex(0);
     }
-  }, [dayAndMonth])
+  }, [dayAndMonth]);
 
   const handleLetter = (key) => {
     if (gameState === 0 && words[index].length < wordLength) {
