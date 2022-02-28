@@ -65,8 +65,8 @@ const darkTheme = createTheme({
       dark: '#001168'
     },
     key_miss: {
-      main: '#141414',
-      dark: '#141414'
+      main: '#444444',
+      dark: '#444444'
     },
   },
 });
