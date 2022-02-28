@@ -74,6 +74,7 @@ const lightTheme = createTheme({
       main: '#9f9f9f',
       dark: '#9f9f9f'
     },
+    copy_symbol: '#000000AA'
   },
 });
 

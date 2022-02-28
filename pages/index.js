@@ -155,7 +155,7 @@ export default function Home() {
       if (index+1 === words.length || winner) {
         setGameState(winner ? 1 : -1)
         setCookie('gameState', winner ? 1 : -1);
-        setMessage({ text: winner ? 'Bra jobbat!' : `Svaret var "${answer}", bättre lycka imorgon.`, duration: 5000 })
+        setMessage({ text: winner ? 'Bra jobbat!' : `Svaret var "${answer}", bättre lycka imorgon.`, duration: 4000 })
       }
       else {
         setIndex(index+1);

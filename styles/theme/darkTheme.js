@@ -68,6 +68,7 @@ const darkTheme = createTheme({
       main: '#444444',
       dark: '#444444'
     },
+    copy_symbol: '#FFFFFF44'
   },
 });
 
