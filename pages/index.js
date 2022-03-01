@@ -5,11 +5,11 @@ import useWindowDimensions from '../hooks/useWindowDimensions';
 import useEvent from '../hooks/useEvent';
 import Keyboard from '../components/keyboard';
 import TileGrid from '../components/tilegrid';
-import { useCookies } from "react-cookie";
 import gradeWord from '../utility/gradeWord';
 import OrigSnackbar from '@mui/material/Snackbar';
 
 import config from '../config.js';
+import useLocalStorage from '../hooks/useLocalStorage';
 const { knownWords, occuringWords, wordLength, attempts } = config;
 
 const Snackbar = styled(OrigSnackbar)(({ theme }) => ({
@@ -59,7 +59,8 @@ export default function Home() {
   const now = new Date();
   const dayAndMonth = String(now.getDate()) + '/' + String(now.getMonth() + 1);
 
-  const [cookies, setCookie] = useCookies(["date", "words", "results", "usedLetters", "gameState"]);
+  const [savedState, setSavedState] = useLocalStorage('savedState', { date: '' })
+  const [pastResults, setPastResults] = useLocalStorage('pastResults', { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, gamesPlayed: 0});
   const [answer] = useState(occuringWords[Math.floor(now/8.64e7) % occuringWords.length]);
   const { width } = useWindowDimensions();
   const tileSize = width < 500 ? width / 6.5 : 70;
@@ -69,6 +70,12 @@ export default function Home() {
   const [usedLetters, setUsedLetters] = useState({});
   const [gameState, setGameState] = useState(0);
   const [message, setMessage] = useState();
+
+  useEffect(() => {
+    if (gameState !== 0) {
+      console.log(pastResults);
+    }
+  },[pastResults]);
 
   useEffect(() => {
     // from https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
@@ -84,23 +91,25 @@ export default function Home() {
 
   useEffect(() => 
   {
-    if(cookies.date === dayAndMonth) {
-      setWords(cookies.words || Array(attempts).fill(''));
-      setUsedLetters(cookies.usedLetters);
-      setResults(cookies.results || []);
-      if (cookies.gameState === '0') {
-        setIndex(cookies.results?.length || 0);
+    if (savedState.date === dayAndMonth) {
+      setWords(savedState.words || Array(attempts).fill(''));
+      setUsedLetters(savedState.usedLetters);
+      setResults(savedState.results || []);
+      if (savedState.gameState === '0') {
+        setIndex(savedState.results?.length || 0);
       }
       else {
-        setGameState(parseInt(cookies.gameState) * 2); // 2 and -2 skips animation
+        setGameState(parseInt(savedState.gameState) * 2); // 2 and -2 skips animation
       }
     }
     else {
-      setCookie('date', dayAndMonth);
-      setCookie('words', Array(attempts).fill(''));
-      setCookie('usedLetters', {});
-      setCookie('results', []);
-      setCookie('gameState', 0);
+      setSavedState({
+        date: dayAndMonth,
+        words: Array(attempts).fill(''),
+        usedLetters: {},
+        results: [],
+        gameState: 0,
+      });
       
       setWords(Array(attempts).fill(''));
       setUsedLetters({});
@@ -108,14 +117,17 @@ export default function Home() {
       setGameState(0);
       setIndex(0);
     }
-  }, [dayAndMonth]);
+  }, [savedState, dayAndMonth]);
 
   const handleLetter = (key) => {
     if (gameState === 0 && words[index].length < wordLength) {
       const newWords = [...words];
       newWords[index] = `${newWords[index]}${key}`;
       setWords(newWords);
-      setCookie('words', newWords);
+      setSavedState((state) => ({
+        ...state,
+        words: newWords
+      }))
     }
   };
 
@@ -124,7 +136,10 @@ export default function Home() {
       const newWords = [...words];
       newWords[index] = newWords[index].substring(0, newWords[index].length-1);
       setWords(newWords);
-      setCookie('words', newWords);
+      setSavedState((state) => ({
+        ...state,
+        words: newWords
+      }))
     }
   };
   
@@ -137,7 +152,6 @@ export default function Home() {
 
       const result = gradeWord(words[index], answer);
       setResults((results) => [...results, result]);
-      setCookie('results', [...results, result]);
 
       const newUsedLetters = {};
       for (let charIdx = 0; charIdx < result.length; charIdx++) {
@@ -149,16 +163,30 @@ export default function Home() {
         }
       }
       setUsedLetters((usedLetters) => ({ ...usedLetters, ...newUsedLetters }));
-      setCookie('usedLetters', { ...usedLetters, ...newUsedLetters });
 
       const winner = (result === '+'.repeat(wordLength));
       if (index+1 === words.length || winner) {
         setGameState(winner ? 1 : -1)
-        setCookie('gameState', winner ? 1 : -1);
         setMessage({ text: winner ? 'Bra jobbat!' : `Svaret var "${answer}", bättre lycka imorgon.`, duration: 4000 })
+        setSavedState((state) => ({
+          ...state,
+          results: [...results, result],
+          usedLetters: { ...usedLetters, ...newUsedLetters },
+          gameState: winner ? 1 : -1
+        }))
+        setPastResults((results) => ({
+          ...results,
+          [index+1]: results[index+1] + 1,
+          gamesPlayed: results.gamesPlayed + 1
+        }));
       }
       else {
         setIndex(index+1);
+        setSavedState((state) => ({
+          ...state,
+          results: [...results, result],
+          usedLetters: { ...usedLetters, ...newUsedLetters }
+        }))
       }
     }
   };
