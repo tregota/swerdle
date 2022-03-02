@@ -35,9 +35,9 @@ const ColorTile = styled(EmptyTile)((props) => ({
 
 const Tile = ({ size, type, letter, position, gameOver }) => {
   if (type) {
-    return <ColorTile elevation={2} data-type={type} data-delay={position*0.2} sx={{ width: `${size}px`, padding: `${(size-2)/2}px 0`, fontSize: `${size/1.3}px` }} data-gameover={gameOver}>{letter || '\u00A0'}</ColorTile>
+    return <ColorTile elevation={2} data-type={type} data-delay={position*0.2} sx={{ width: `${size}px`, padding: `${(size-2)/2}px 0`, fontSize: `${size/1.4}px` }} data-gameover={gameOver}>{letter || '\u00A0'}</ColorTile>
   }
-  return <EmptyTile elevation={2} data-delay={position*0.2} sx={{ width: `${size}px`, padding: `${(size-2)/2}px 0`, fontSize: `${size/1.3}px` }} data-gameover={gameOver}>{letter || '\u00A0'}</EmptyTile>
+  return <EmptyTile elevation={2} data-delay={position*0.2} sx={{ width: `${size}px`, padding: `${(size-2)/2}px 0`, fontSize: `${size/1.4}px` }} data-gameover={gameOver}>{letter || '\u00A0'}</EmptyTile>
 }
 
 export default Tile;
