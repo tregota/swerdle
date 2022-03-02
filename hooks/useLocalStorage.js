@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 
 export default function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(initialValue);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const item = window.localStorage.getItem(key);
-        setStoredValue(item ? JSON.parse(item) : initialValue);
-        setLoading(false);
+        if (item) {
+          setStoredValue(JSON.parse(item));
+        }
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -27,5 +29,5 @@ export default function useLocalStorage(key, initialValue) {
       console.log(error);
     }
   };
-  return [storedValue, setValue, loading];
+  return [storedValue, setValue, isLoading];
 }
