@@ -97,7 +97,7 @@ export default function Home() {
     else if(gameState !== 0 && Math.abs(gameState) !== 2) {
       setGameState(gameState*2);
     }
-  }, [loadingStorage, dayAndMonth]);
+  }, [isLoading, dayAndMonth]);
 
   const handleLetter = (key) => {
     if (gameState === 0 && words[index].length < wordLength) {
