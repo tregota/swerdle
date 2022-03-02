@@ -21,7 +21,8 @@ const darkTheme = createTheme({
     },
     tiletypes: {
       empty: {
-        main: 'rgba(255, 255, 255, 0.05)'
+        main: 'rgba(255, 255, 255, 0.05)',
+        text: '#ffffff'
       },
       miss: {
         main: '#595959',

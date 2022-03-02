@@ -21,6 +21,7 @@ const EmptyTile = styled(Paper)(({ theme, ...props }) => ({
     "75%": {
       background: theme.palette.tiletypes.empty.main,
       border: `1px solid ${theme.palette.tiletypes.empty.main}`,
+      color: theme.palette.tiletypes.empty.text
     },
     "76%, 100%": {
       background: `linear-gradient(to bottom, ${colors.main}, ${colors.dark})`,

@@ -92,14 +92,14 @@ export default function Home() {
   useEffect(() => 
   {
     if (savedState.date === dayAndMonth) {
-      setWords(savedState.words || Array(attempts).fill(''));
+      setWords(savedState.words);
       setUsedLetters(savedState.usedLetters);
-      setResults(savedState.results || []);
-      if (savedState.gameState === '0') {
+      setResults(savedState.results);
+      if (savedState.gameState === 0) {
         setIndex(savedState.results?.length || 0);
       }
       else {
-        setGameState(parseInt(savedState.gameState) * 2); // 2 and -2 skips animation
+        setGameState(savedState.gameState * 2); // 2 and -2 skips animation
       }
     }
     else {

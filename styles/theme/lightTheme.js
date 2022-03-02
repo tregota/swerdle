@@ -27,7 +27,8 @@ const lightTheme = createTheme({
     },
     tiletypes: {
       empty: {
-        main: '#ffffff'
+        main: '#ffffff',
+        text: '#000000'
       },
       miss: {
         main: '#fbfbfb',
