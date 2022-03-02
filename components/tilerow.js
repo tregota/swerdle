@@ -21,7 +21,7 @@ const TileRow = ({ letters = '', types = '', tileSize, wordLength  = 5, gameOver
 
   return (
     <TileRowContainer>
-      {Array.from(Array(wordLength).keys()).map((index) => <TileComponent key={index} flipped={!!types} position={index} size={gameOver ? tileSize/2 : tileSize} letter={gameOver ? undefined : tileLetters[index]} type={typeMapping[tileTypes[index]]} gameOver={gameOver} />)}
+      {Array.from(Array(wordLength).keys()).map((index) => <TileComponent key={index} flipped={!!types} position={index} size={gameOver ? tileSize/2 : tileSize} letter={tileLetters[index]} type={typeMapping[tileTypes[index]]} gameOver={gameOver} />)}
     </TileRowContainer>
   )
 }

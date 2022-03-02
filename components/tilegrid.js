@@ -29,6 +29,7 @@ const Text = styled('div')(({ theme, fontSize }) => ({
 
 const TileGrid = ({ words, results, tileSize, wordLength  = 5, gameState, date, onCopy }) => {
   const [showGameOver, setShowGameOver] = useState(false);
+  const [hover, setHover] = useState(false);
   const theme = useTheme();
 
   useEffect(() => {
@@ -60,9 +61,14 @@ const TileGrid = ({ words, results, tileSize, wordLength  = 5, gameState, date, 
 
   return (
     <>
-      <Clickable gameOver={gameState !== 0} onClick={handleClick}>
+      <Clickable
+        gameOver={gameState !== 0}
+        onClick={handleClick}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
         {gameState === 0 ? null : <Text fontSize={tileSize/3}>{"SWERDLE " + date}</Text>}
-        {words.filter((word) => gameState === 0 || word !== '').map((word, idx) => <TileRow key={idx} wordLength={wordLength} tileSize={tileSize} letters={word} types={results[idx]} gameOver={showGameOver} />)}
+        {words.filter((word) => gameState === 0 || word !== '').map((word, idx) => <TileRow key={idx} wordLength={wordLength} tileSize={tileSize} letters={!showGameOver || !hover ? word : undefined} types={results[idx]} gameOver={showGameOver} />)}
         {gameState === 0 ? null : <Text fontSize={tileSize/5}>{"KOPIERA TILL URKLIPP"}</Text>}
       </Clickable>
     </>
