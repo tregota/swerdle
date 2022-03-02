@@ -60,7 +60,7 @@ export default function Home() {
 
   const [pastResults, setPastResults] = useLocalStorage('pastResults', { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, gamesPlayed: 0});
 
-  const [date, setDate] =  useLocalStorage('date', '');
+  const [date, setDate, isLoading] =  useLocalStorage('date');
   const [words, setWords] =  useLocalStorage('words', Array(attempts).fill(''));
   const [results, setResults] =  useLocalStorage('results', []);
   const [index, setIndex] =  useLocalStorage('index', 0);
@@ -86,7 +86,7 @@ export default function Home() {
 
   useEffect(() => 
   {
-    if (date !== '' && date !== dayAndMonth) {
+    if (!isLoading && date !== dayAndMonth) {
       setDate(dayAndMonth);
       setWords(Array(attempts).fill(''));
       setUsedLetters({});
@@ -97,7 +97,7 @@ export default function Home() {
     else if(gameState !== 0 && Math.abs(gameState) !== 2) {
       setGameState(gameState*2);
     }
-  }, [date, dayAndMonth]);
+  }, [loadingStorage, dayAndMonth]);
 
   const handleLetter = (key) => {
     if (gameState === 0 && words[index].length < wordLength) {
