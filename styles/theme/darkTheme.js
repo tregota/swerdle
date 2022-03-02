@@ -41,7 +41,8 @@ const darkTheme = createTheme({
       blue: {
         main: '#023fc3',
         dark: '#032670',
-        light: '#4663ef'
+        light: '#4663ef',
+        text: '#fee637'
       }
     },
     key_backspace: {

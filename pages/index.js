@@ -63,7 +63,7 @@ export default function Home() {
   const [pastResults, setPastResults] = useLocalStorage('pastResults', { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, gamesPlayed: 0});
   const [answer] = useState(occuringWords[Math.floor(now/8.64e7) % occuringWords.length]);
   const { width } = useWindowDimensions();
-  const tileSize = width < 500 ? width / 6.5 : 70;
+  const tileSize = width < 500 ? width / 6.6 : 70;
   const [words, setWords] = useState([]);
   const [results, setResults] = useState([]);
   const [index, setIndex] = useState(0);
