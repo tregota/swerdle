@@ -61,7 +61,7 @@ export default function Home() {
   const [pastResults, setPastResults] = useLocalStorage('pastResults', { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, gamesPlayed: 0});
 
   const [date, setDate] =  useLocalStorage('date', '');
-  const [words, setWords] =  useLocalStorage('words', []);
+  const [words, setWords] =  useLocalStorage('words', Array(attempts).fill(''));
   const [results, setResults] =  useLocalStorage('results', []);
   const [index, setIndex] =  useLocalStorage('index', 0);
   const [usedLetters, setUsedLetters] =  useLocalStorage('usedLetters', {});
