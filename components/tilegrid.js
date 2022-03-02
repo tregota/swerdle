@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import TileRow from './tilerow';
 import styled from '@emotion/styled';
 import { useTheme } from '@emotion/react';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import config from '../config.js';
 const { typeMapping, url } = config;
@@ -21,30 +20,11 @@ const Clickable = styled('div')(({ gameOver }) => ({
     cursor: 'pointer'
   }
 }));
-const ClickTip = styled('div')(({ theme, tileSize }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  position: 'absolute',
-  top: `${tileSize}px`,
-  left: 0,
-  height: `calc(100% - ${tileSize}px)`,
-  width: '100%',
-  '& span': {
-    flex: 1,
-    textAlign: 'center',
-  },
-  '& svg': {
-    color: 'transparent',
-    fontSize: `${tileSize*2}px`
-  },
-  '&:hover svg': {
-    color: theme.palette.copy_symbol
-  }
-}));
 const Text = styled('div')(({ theme, fontSize }) => ({
   textAlign: 'center',
   fontSize: `${fontSize}px`,
-  color: theme.palette.copy_symbol
+  color: theme.palette.resulttext,
+  marginTop: '5px'
 }));
 
 const TileGrid = ({ words, results, tileSize, wordLength  = 5, gameState, date, onCopy }) => {
@@ -83,7 +63,6 @@ const TileGrid = ({ words, results, tileSize, wordLength  = 5, gameState, date, 
       <Clickable gameOver={gameState !== 0} onClick={handleClick}>
         {gameState === 0 ? null : <Text fontSize={tileSize/3}>{"SWERDLE " + date}</Text>}
         {words.filter((word) => gameState === 0 || word !== '').map((word, idx) => <TileRow key={idx} wordLength={wordLength} tileSize={tileSize} letters={word} types={results[idx]} gameOver={showGameOver} />)}
-        {gameState === 0 ? null : <ClickTip tileSize={tileSize/2.5}><span><ContentCopyIcon /></span></ClickTip>}
         {gameState === 0 ? null : <Text fontSize={tileSize/5}>{"KOPIERA TILL URKLIPP"}</Text>}
       </Clickable>
     </>
