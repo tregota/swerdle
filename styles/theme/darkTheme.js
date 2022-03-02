@@ -67,8 +67,8 @@ const darkTheme = createTheme({
       dark: '#001168'
     },
     key_miss: {
-      main: '#444444',
-      dark: '#444444'
+      main: '#361414',
+      dark: '#2e0f0f'
     },
     resulttext: '#FFFFFF44'
   },

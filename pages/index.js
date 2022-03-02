@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import useWindowDimensions from '../hooks/useWindowDimensions';
-import useEvent from '../hooks/useEvent';
 import Keyboard from '../components/keyboard';
 import TileGrid from '../components/tilegrid';
 import gradeWord from '../utility/gradeWord';
@@ -59,75 +58,52 @@ export default function Home() {
   const now = new Date();
   const dayAndMonth = String(now.getDate()) + '/' + String(now.getMonth() + 1);
 
-  const [savedState, setSavedState] = useLocalStorage('savedState', { date: '' })
   const [pastResults, setPastResults] = useLocalStorage('pastResults', { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, gamesPlayed: 0});
-  const [answer] = useState(occuringWords[Math.floor(now/8.64e7) % occuringWords.length]);
-  const { width } = useWindowDimensions();
-  const tileSize = width < 500 ? width / 6.6 : 70;
-  const [words, setWords] = useState([]);
-  const [results, setResults] = useState([]);
-  const [index, setIndex] = useState(0);
-  const [usedLetters, setUsedLetters] = useState({});
-  const [gameState, setGameState] = useState(0);
+
+  const [date, setDate] =  useLocalStorage('date', '');
+  const [words, setWords] =  useLocalStorage('words', []);
+  const [results, setResults] =  useLocalStorage('results', []);
+  const [index, setIndex] =  useLocalStorage('index', 0);
+  const [usedLetters, setUsedLetters] =  useLocalStorage('usedLetters', {});
+  const [gameState, setGameState] =  useLocalStorage('gameState', 0);
   const [message, setMessage] = useState();
+
+  const [answer] = useState(occuringWords[Math.floor(now/8.64e7) % occuringWords.length]);
+  const { width, height } = useWindowDimensions();
+  const tileSize = width < 500 ? width / 6.6 : 70;
 
   useEffect(() => {
     if (gameState !== 0) {
+      // just print statistics to console log for now
       console.log(pastResults);
     }
   },[pastResults]);
 
   useEffect(() => {
     // from https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  },[]);
-
-  useEvent('resize', () => {
-    // We execute the same script as before
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  }, [])
+    document.documentElement.style.setProperty('--vh', `${height * 0.01}px`);
+  }, [height])
 
   useEffect(() => 
   {
-    if (savedState.date === dayAndMonth) {
-      setWords(savedState.words);
-      setUsedLetters(savedState.usedLetters);
-      setResults(savedState.results);
-      if (savedState.gameState === 0) {
-        setIndex(savedState.results?.length || 0);
-      }
-      else {
-        setGameState(savedState.gameState * 2); // 2 and -2 skips animation
-      }
-    }
-    else {
-      setSavedState({
-        date: dayAndMonth,
-        words: Array(attempts).fill(''),
-        usedLetters: {},
-        results: [],
-        gameState: 0,
-      });
-      
+    if (date !== '' && date !== dayAndMonth) {
+      setDate(dayAndMonth);
       setWords(Array(attempts).fill(''));
       setUsedLetters({});
       setResults([]);
       setGameState(0);
       setIndex(0);
     }
-  }, [savedState, dayAndMonth]);
+    else if(gameState !== 0 && Math.abs(gameState) !== 2) {
+      setGameState(gameState*2);
+    }
+  }, [date, dayAndMonth]);
 
   const handleLetter = (key) => {
     if (gameState === 0 && words[index].length < wordLength) {
       const newWords = [...words];
       newWords[index] = `${newWords[index]}${key}`;
       setWords(newWords);
-      setSavedState((state) => ({
-        ...state,
-        words: newWords
-      }))
     }
   };
 
@@ -136,10 +112,6 @@ export default function Home() {
       const newWords = [...words];
       newWords[index] = newWords[index].substring(0, newWords[index].length-1);
       setWords(newWords);
-      setSavedState((state) => ({
-        ...state,
-        words: newWords
-      }))
     }
   };
   
@@ -168,12 +140,6 @@ export default function Home() {
       if (index+1 === words.length || winner) {
         setGameState(winner ? 1 : -1)
         setMessage({ text: winner ? 'Bra jobbat!' : `Svaret var "${answer}", bättre lycka imorgon.`, duration: 4000 })
-        setSavedState((state) => ({
-          ...state,
-          results: [...results, result],
-          usedLetters: { ...usedLetters, ...newUsedLetters },
-          gameState: winner ? 1 : -1
-        }))
         setPastResults((results) => ({
           ...results,
           [index+1]: results[index+1] + 1,
@@ -182,11 +148,6 @@ export default function Home() {
       }
       else {
         setIndex(index+1);
-        setSavedState((state) => ({
-          ...state,
-          results: [...results, result],
-          usedLetters: { ...usedLetters, ...newUsedLetters }
-        }))
       }
     }
   };
